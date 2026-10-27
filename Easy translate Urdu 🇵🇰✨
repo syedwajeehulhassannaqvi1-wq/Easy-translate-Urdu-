@@ -95,3 +95,76 @@ else
         translateChunk(i, chunk)
     end
 end
+
+-- AUTOUPDATE_BEGIN (یہ حصہ ایڈٹ نہ کریں)
+do
+  local UPD_NAME = "Tool" --@@NAME
+  local UPD_VER = 0 --@@VER
+  local UPD_CODE_BASE = "" --@@CB
+  local UPD_VER_BASE = "" --@@VB
+  local UPD_EXT = ".lua"
+  pcall(function()
+    local Http = luajava.bindClass("com.androlua.Http")
+    local Toast = luajava.bindClass("android.widget.Toast")
+    local AlertDialog = luajava.bindClass("android.app.AlertDialog")
+    local ctx = _G.service or _G.activity
+    if not ctx then return end
+    local src = debug.getinfo(1, "S").source or ""
+    local selfPath = src:match("^@(.+)$")
+    local function toast(m) Toast.makeText(ctx, tostring(m), 1).show() end
+    local function show(title, msg, yes)
+      local b = AlertDialog.Builder(ctx).setTitle(title).setMessage(msg)
+      if yes then
+        b = b.setPositiveButton("اپڈیٹ کریں", {onClick = yes}).setNegativeButton("بعد میں", nil)
+      else
+        b = b.setPositiveButton("ٹھیک ہے", nil)
+      end
+      local d = b.create()
+      if _G.service then d.getWindow().setType(2032) end
+      d.show()
+    end
+    local function install()
+      toast("اپڈیٹ ڈاؤن لوڈ ہو رہی ہے...")
+      Http.get(UPD_CODE_BASE .. "/" .. UPD_NAME .. UPD_EXT .. "?t=" .. os.time(), function(c, body)
+        if c ~= 200 or not body or #body == 0 then
+          toast("ڈاؤن لوڈ ناکام۔ HTTP " .. tostring(c))
+          return
+        end
+        local fn = (loadstring or load)(body)
+        if not fn then
+          toast("نئی فائل میں غلطی ہے، اپڈیٹ روک دی گئی")
+          return
+        end
+        if not selfPath then
+          toast("ٹول کی فائل کا راستہ نہیں ملا")
+          return
+        end
+        local f = io.open(selfPath, "rb")
+        if f then
+          local old = f:read("*a")
+          f:close()
+          local bf = io.open(selfPath .. ".bak", "wb")
+          if bf then bf:write(old) bf:close() end
+        end
+        local w = io.open(selfPath, "wb")
+        if not w then
+          toast("فائل لکھنے میں ناکامی")
+          return
+        end
+        w:write(body)
+        w:close()
+        show("اپڈیٹ مکمل", "ٹول اپڈیٹ ہو گیا ہے۔ اسے دوبارہ چلائیں۔")
+      end)
+    end
+    Http.get(UPD_VER_BASE .. "/" .. UPD_NAME .. ".txt?t=" .. os.time(), function(c, content)
+      if c ~= 200 or not content then return end
+      local newVer = tonumber(content:match("^%s*(%d+)"))
+      if not newVer or newVer <= UPD_VER then return end
+      local notes = content:match("^%s*%d+%s*\n(.*)") or ""
+      local msg = UPD_NAME .. " کا نیا ورژن " .. newVer .. " دستیاب ہے۔"
+      if notes ~= "" then msg = msg .. "\n\nنیا کیا ہے:\n" .. notes end
+      show("اپڈیٹ دستیاب ہے", msg, install)
+    end)
+  end)
+end
+-- AUTOUPDATE_END
