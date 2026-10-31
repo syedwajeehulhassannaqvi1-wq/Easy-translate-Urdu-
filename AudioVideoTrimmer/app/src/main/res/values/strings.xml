@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audio Video Trimmer</string>
+    <string name="select_media">Select Audio or Video</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="rewind">Rewind</string>
+    <string name="forward">Forward</string>
+    <string name="set_start">Set Start</string>
+    <string name="set_end">Set End</string>
+    <string name="trim">Trim Media</string>
+    <string name="start_time">Start: %1$s</string>
+    <string name="end_time">End: %1$s</string>
+    <string name="duration">Duration: %1$s</string>
+    <string name="current_position">Position: %1$s</string>
+    <string name="seek_seconds_label">Seek Seconds</string>
+    <string name="seek_seconds_hint">Seconds for Rewind/Forward (1-60)</string>
+    <string name="trim_success">Trimmed file saved successfully</string>
+    <string name="trim_failed">Failed to trim media</string>
+    <string name="no_media_selected">Please select a media file first</string>
+    <string name="invalid_range">Start time must be less than End time</string>
+    <string name="processing">Processing… Please wait</string>
+    <string name="media_info">Selected: %1$s</string>
+    <string name="accessibility_play_pause">Play or Pause the media</string>
+    <string name="accessibility_rewind">Rewind by selected seconds</string>
+    <string name="accessibility_forward">Forward by selected seconds</string>
+    <string name="accessibility_set_start">Set current position as Start marker</string>
+    <string name="accessibility_set_end">Set current position as End marker</string>
+    <string name="accessibility_trim">Trim the media between Start and End markers</string>
+    <string name="accessibility_select">Select an audio or video file from device</string>
+    <string name="accessibility_seekbar">Media timeline. Drag to seek</string>
+    <string name="accessibility_player">Video and audio player</string>
+</resources>
